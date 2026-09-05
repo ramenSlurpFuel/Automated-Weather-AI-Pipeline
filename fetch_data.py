@@ -9,7 +9,6 @@ def get_weather_data():
     data = response.json()
 
     #---Create DataFrame---
-
     df = pd.DataFrame({
         "time": data["hourly"]["time"],
         "temperature_2m": data["hourly"]["temperature_2m"],

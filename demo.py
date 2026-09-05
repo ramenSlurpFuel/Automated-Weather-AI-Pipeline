@@ -1,9 +1,15 @@
-print("Hello World")
+import sqlite3
 
-from dotenv import load_dotenv
-import os
-load_dotenv()  # reads .env and loads variables into the environment
+conn = sqlite3.connect("pipeline.db")
+cursor = conn.cursor()
 
-api_key = os.getenv("ANTHROPIC_API_KEY")
+cursor.execute("SELECT COUNT(*) FROM weather")
+print("total rows:", cursor.fetchone())
 
-print(f"ANTHROPIC_API_KEY: {api_key}")
+cursor.execute("SELECT COUNT(DISTINCT time) FROM weather")
+print("distinct timestamps:", cursor.fetchone())
+
+cursor.execute("SELECT MIN(time), MAX(time) FROM weather")
+print("time range:", cursor.fetchone())
+
+conn.close()

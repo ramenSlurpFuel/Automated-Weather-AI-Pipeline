@@ -1,5 +1,6 @@
 import sqlite3
 
+#---Store fetched data in database---
 def store_data(df):
     conn = sqlite3.connect("pipeline.db")
     cursor = conn.cursor()
@@ -19,5 +20,28 @@ def store_data(df):
 
     rows = list(df_to_insert.itertuples(index=False, name=None))
     cursor.executemany("INSERT OR IGNORE INTO weather VALUES (?, ?)", rows)
+    conn.commit()
+    conn.close()
+
+#---Store summary in database---
+
+from datetime import datetime
+
+def store_summary(summary_text):
+    conn = sqlite3.connect("pipeline.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS summaries (
+            time TEXT,
+            summary_text TEXT
+        )
+    """)
+    conn.commit()
+
+    cursor.execute(
+        "INSERT INTO summaries VALUES (?, ?)",
+        (datetime.now().isoformat(), summary_text)
+    )
     conn.commit()
     conn.close()
